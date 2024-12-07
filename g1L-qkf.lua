@@ -822,7 +822,11 @@ do
 		end
 
 		function t:AutoSave(value)
-			Library.AutoSave.Value = value or false
+			repeat
+				Library.AutoSave.Value = value
+				task.wait()
+			until Library.AutoSave.Value == value
+			task.wait(0.125)
 		end
 
 		function t:SaveConfigs()
@@ -2931,11 +2935,11 @@ do
 						SliderInput.TextBox.Text = s.Value
 						SliderLine.Frame.TextLabel.Text = tostring(s.Value)
 					end
+					task.spawn(function()
+						t:SaveConfigs()
+					end)
 					Library.SafeCallback(changedD, s.Value)
 					Library.SafeCallback(l.Callback, s.Value)
-					if Library.AutoSave.Value then
-						t:SaveConfigs()
-					end
 				end
 
 				function s:OnChanged(changed)
@@ -3049,11 +3053,11 @@ do
 					end
 					s.Value = value
 					Input.Text = value
+					task.spawn(function()
+						t:SaveConfigs()
+					end)
 					Library.SafeCallback(changedD, s.Value)
 					Library.SafeCallback(l.Callback, s.Value)
-					if Library.AutoSave.Value then
-						t:SaveConfigs()
-					end
 				end
 
 				function s:OnChanged(changed)
@@ -3158,14 +3162,14 @@ do
 					value = not (not value)
 					s.Value = value
 
+					task.spawn(function()
+						t:SaveConfigs()
+					end)
 					Toggle.BackgroundTransparency = value and 0 or 1
 					Toggle.UIStroke.Transparency = value and 1 or 0
 					Toggle.ImageLabel.Visible = value and true or false
 					Library.SafeCallback(changedD, s.Value)
 					Library.SafeCallback(l.Callback, s.Value)
-					if Library.AutoSave.Value then
-						t:SaveConfigs()
-					end
 				end
 
 				function s:OnChanged(changed)
@@ -3969,12 +3973,12 @@ do
 											s.Value[f].Number = T.Number
 										end
 									end
+									task.spawn(function()
+										t:SaveConfigs()
+									end)
 									s.UpdateTextDisplay()
 									Library.SafeCallback(changedD, s.Value)
 									Library.SafeCallback(l.Callback, s.Value)
-									if Library.AutoSave.Value then
-										t:SaveConfigs()
-									end
 								end
 
 								Library.AddSignal(K.TextBox.Focused, function()
@@ -4075,12 +4079,12 @@ do
 										s.MultiValue[f] = true
 									end
 								end
+								task.spawn(function()
+									t:SaveConfigs()
+								end)
 								s.UpdateTextDisplay()
 								Library.SafeCallback(changedD, s.Value)
 								Library.SafeCallback(l.Callback, s.Value)
-								if Library.AutoSave.Value then
-									t:SaveConfigs()
-								end
 								local textdesb = Descriptioninfo.Visible and Descriptioninfo.TextBounds.Y or 6
 
 								DropdownFrame.Parent.Size = UDim2.new(1, 0, 1, -(Titleinfo.TextBounds.Y + textdesb + 30))
@@ -4318,12 +4322,12 @@ do
 							s.Value = nil
 						end
 					end
+					task.spawn(function()
+						t:SaveConfigs()
+					end)
 					s.UpdateTextDisplay()
 					Library.SafeCallback(changedD, s.Value)
 					Library.SafeCallback(l.Callback, s.Value)
-					if Library.AutoSave.Value then
-						t:SaveConfigs()
-					end
 				end
 
 				function s:SetTitle(text)
@@ -4463,11 +4467,11 @@ do
 									Text.TextColor3 = Color3.fromRGB(200, 200, 200)
 									en:Disconnect()
 									ec:Disconnect()
+									task.spawn(function()
+										t:SaveConfigs()
+									end)
 									Library.SafeCallback(changedD, value.KeyCode or value.UserInputType)
 									Library.SafeCallback(l.Callback, value.KeyCode or value.UserInputType)
-									if Library.AutoSave.Value then
-										t:SaveConfigs()
-									end
 								end
 							end)
 						end)
@@ -4529,11 +4533,11 @@ do
 					else
 						Text.TextColor3 = Color3.fromRGB(200, 200, 200)
 					end
+					task.spawn(function()
+						t:SaveConfigs()
+					end)
 					s.Value = value
 					s.Mode = mode
-					if Library.AutoSave.Value then
-						t:SaveConfigs()
-					end
 				end
 				function s:DoClick()
 					if not s.Value then
@@ -4606,9 +4610,9 @@ do
 
 					s.Value = Color3.fromHSV(C, D, E)
 
-					if Library.AutoSave.Value then
+					task.spawn(function()
 						t:SaveConfigs()
-					end
+					end)
 				end
 				s.SetHSVFromRGB(s.Value)
 
