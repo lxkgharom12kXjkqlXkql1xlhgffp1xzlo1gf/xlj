@@ -23,11 +23,7 @@ local Library = {
 	Menuinfo = {},
 	Info = nil,
 	Position = nil,
-	AutoSave = {
-		Value = false,
-		IsFolder = false
-	},
-	Ignore = {},
+	AutoSave = false,
 	Start = tick()
 }
 
@@ -822,44 +818,31 @@ do
 		end
 
 		function t:AutoSave(value)
-			repeat
-				Library.AutoSave.Value = value
-				task.wait()
-			until Library.AutoSave.Value == value
-			task.wait(0.125)
+			if not Options.Save then
+				return
+			end
+			if Options.Save:find("/", 1, true) then
+				for ll = 1, #Options.Save:split("/") do
+					if not isfolder(Options.Save:split("/")[ll]) then
+						makefolder(Options.Save:split("/")[ll])
+					end
+				end
+			elseif not isfolder(Options.Save) then
+				makefolder(Options.Save)
+			end
+			Library.AutoSave = value
 		end
 
 		function t:SaveConfigs()
-			if Library.AutoSave.Value and Options.Save and writefile and isfolder and makefolder then
+			if Library.AutoSave and Options.Save and writefile and isfolder and makefolder then
 				local fullPath, DncodePath = Options.Save.."/Configs.json", Options.Save
-
-				if not Library.AutoSave.IsFolder then
-					local makePath = {}
-					local decoded = {fullPath}
-
-					if DncodePath:find("/") then
-						decoded = DncodePath:split("/")
-					end
-					for idx = 1, #decoded do
-						makePath[idx] = table.concat(decoded, "/", 1, idx)
-					end
-					for idx = 1, #makePath do
-						local folder = makePath[idx]
-						if not isfolder(folder) then
-							   makefolder(folder)
-						end
-					end
-					Library.AutoSave.IsFolder = true
-				end
 
 				local data = {objects = {}}
 
 				for idx, option in next, Library.Options do
-					if not Library.Parser[option.Type] then continue end
-					if Library.Ignore[idx] then continue end
-					if Options.Ignore[idx] then continue end
-					if table.find(Library.Ignore, idx) then continue end
-					if table.find(Options.Ignore, idx) then continue end
+					if not Library.Parser[option.Type] or table.find(Options.Ignore, idx) then
+						continue
+					end
 
 					table.insert(data.objects, Library.Parser[option.Type].Save(idx, option))
 				end
@@ -2895,6 +2878,9 @@ do
 					   SliderInput.TextBox.Text = SliderInput.TextBox.Text:split(".")[1]
 					end
 					s:SetValue(SliderInput.TextBox.Text)
+					task.spawn(function()
+						t:SaveConfigs()
+					end)
 				end)
 
 				Library.AddSignal(SliderLine.Frame.ImageLabel.InputBegan, function(input)
@@ -2913,6 +2899,9 @@ do
 					if drag and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
 						local value = math.clamp((input.Position.X - SliderLine.Frame.AbsolutePosition.X) / SliderLine.Frame.AbsoluteSize.X, 0, 1)
 						s:SetValue(s.Min + ((s.Max - s.Min) * value))
+						task.spawn(function()
+							t:SaveConfigs()
+						end)
 					end
 				end)
 
@@ -2935,9 +2924,6 @@ do
 						SliderInput.TextBox.Text = s.Value
 						SliderLine.Frame.TextLabel.Text = tostring(s.Value)
 					end
-					task.spawn(function()
-						t:SaveConfigs()
-					end)
 					Library.SafeCallback(changedD, s.Value)
 					Library.SafeCallback(l.Callback, s.Value)
 				end
@@ -2958,6 +2944,9 @@ do
 
 				s:SetValue(s.Value)
 				Library.AddConfigs(n, s)
+				task.spawn(function()
+					t:SaveConfigs()
+				end)
 				return s
 			end
 
@@ -3053,9 +3042,6 @@ do
 					end
 					s.Value = value
 					Input.Text = value
-					task.spawn(function()
-						t:SaveConfigs()
-					end)
 					Library.SafeCallback(changedD, s.Value)
 					Library.SafeCallback(l.Callback, s.Value)
 				end
@@ -3068,10 +3054,16 @@ do
 				if s.Finished then
 					Library.AddSignal(Input.FocusLost, function()
 						s:SetValue(Input.Text)
+						task.spawn(function()
+							t:SaveConfigs()
+						end)
 					end)
 				else
 					Library.AddSignal(Input:GetPropertyChangedSignal("Text"), function()
 						s:SetValue(Input.Text)
+						task.spawn(function()
+							t:SaveConfigs()
+						end)
 					end)
 				end
 
@@ -3085,6 +3077,9 @@ do
 
 				s:SetValue(s.Value)
 				Library.AddConfigs(n, s)
+				task.spawn(function()
+					t:SaveConfigs()
+				end)
 				return s
 			end
 
@@ -3153,6 +3148,9 @@ do
 						return
 					end
 					s:SetValue(not s.Value)
+					task.spawn(function()
+						t:SaveConfigs()
+					end)
 				end)
 
 				function s:SetValue(value)
@@ -3162,9 +3160,6 @@ do
 					value = not (not value)
 					s.Value = value
 
-					task.spawn(function()
-						t:SaveConfigs()
-					end)
 					Toggle.BackgroundTransparency = value and 0 or 1
 					Toggle.UIStroke.Transparency = value and 1 or 0
 					Toggle.ImageLabel.Visible = value and true or false
@@ -3188,6 +3183,9 @@ do
 
 				s:SetValue(s.Value)
 				Library.AddConfigs(n, s)
+				task.spawn(function()
+					t:SaveConfigs()
+				end)
 				return s
 			end
 
@@ -3680,6 +3678,9 @@ do
 				end
 
 				function s.UpdateTextDisplay()
+					task.spawn(function()
+						t:SaveConfigs()
+					end)
 					if s.Multi and s.Value then
 						local text = l.Placeholder or "N/A"
 						if #s.GetActiveValues() > 0 then
@@ -3973,9 +3974,6 @@ do
 											s.Value[f].Number = T.Number
 										end
 									end
-									task.spawn(function()
-										t:SaveConfigs()
-									end)
 									s.UpdateTextDisplay()
 									Library.SafeCallback(changedD, s.Value)
 									Library.SafeCallback(l.Callback, s.Value)
@@ -4079,9 +4077,6 @@ do
 										s.MultiValue[f] = true
 									end
 								end
-								task.spawn(function()
-									t:SaveConfigs()
-								end)
 								s.UpdateTextDisplay()
 								Library.SafeCallback(changedD, s.Value)
 								Library.SafeCallback(l.Callback, s.Value)
@@ -4322,9 +4317,6 @@ do
 							s.Value = nil
 						end
 					end
-					task.spawn(function()
-						t:SaveConfigs()
-					end)
 					s.UpdateTextDisplay()
 					Library.SafeCallback(changedD, s.Value)
 					Library.SafeCallback(l.Callback, s.Value)
@@ -4347,6 +4339,7 @@ do
 				s:SetValue(s.Default)
 				s.UpdateTextDisplay()
 				Library.AddConfigs(n, s)
+				s.UpdateTextDisplay()
 				return s
 			end
 
@@ -5096,6 +5089,10 @@ do
 					local textdesb = Descriptioninfo.Visible and Descriptioninfo.TextBounds.Y or 6
 
 					ColorPickerFrame.Parent.Size = UDim2.new(1, 0, 1, -(Titleinfo.TextBounds.Y + textdesb + 30))
+
+					task.spawn(function()
+						t:SaveConfigs()
+					end)
 				end
 
 				Library.AddSignal(Titleinfo.Changed, function()
