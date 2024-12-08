@@ -3412,7 +3412,7 @@ do
 						e("UIListLayout",
 							{
 								Padding = UDim.new(0, 8),
-								SortOrder = Enum.SortOrder.LayoutOrder,
+								SortOrder = l.ByName and Enum.SortOrder.Name or Enum.SortOrder.LayoutOrder,
 								FillDirection = Enum.FillDirection.Vertical
 							}
 						)
