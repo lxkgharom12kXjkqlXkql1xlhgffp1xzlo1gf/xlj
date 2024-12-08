@@ -3830,6 +3830,7 @@ do
                         )
                         Library.Dropdown[n].List[f].Container = e("TextButton",
                             {
+								Name = l.ByName and f or "TextButton",
                                 ZIndex = 3,
                                 Parent = DropdownFrame,
                                 Size = UDim2.new(1, -10, 0, 30),
