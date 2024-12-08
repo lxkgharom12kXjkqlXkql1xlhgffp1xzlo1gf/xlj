@@ -830,11 +830,11 @@ do
 				if Options.Save:find("/") then
 					b = Options.Save:split("/")
 				end
-				for i = 1, # b do
-					j[i] = table.concat(b, "/", 1, i)
+				for il = 1, # b do
+					j[il] = table.concat(b, "/", 1, il)
 				end
-				for i = 1, # j do
-					local s = j[i]
+				for il = 1, # j do
+					local s = j[il]
 					if not isfolder(s) then
 						makefolder(s)
 					end
