@@ -823,9 +823,20 @@ do
 				return
 			end
 			if Options.Save:find("/", 1, true) then
-				for ll = 1, #Options.Save:split("/") do
-					if not isfolder(Options.Save:split("/")[ll]) then
-						makefolder(Options.Save:split("/")[ll])
+				local j = {}
+				local b = {
+					Options.Save
+				}
+				if Options.Save:find("/") then
+					b = Options.Save:split("/")
+				end
+				for i = 1, # b do
+					j[i] = table.concat(b, "/", 1, i)
+				end
+				for i = 1, # j do
+					local s = j[i]
+					if not isfolder(s) then
+						makefolder(s)
 					end
 				end
 			elseif not isfolder(Options.Save) then
@@ -833,6 +844,7 @@ do
 			end
 			Library.AutoSave = value
 		end
+
 
 		function t:SaveConfigs()
 			if Library.AutoSave and Options.Save and writefile and isfolder and makefolder then
@@ -848,9 +860,6 @@ do
 				end
 				local success, encoded = pcall(game:GetService "HttpService".JSONEncode, game:GetService "HttpService", data)
 				if not success then
-					warn(
-						tostring(encoded)
-					)
 					return
 				end
 				writefile(fullPath, encoded)
@@ -4212,14 +4221,15 @@ do
 							if s.List[v] then
 								if s.Value then
 									for ee,vv in next, s.Value do
-										if type(ee) == "string" and not value[ee] then
-											s.Value[ee] = nil
-											s.Values[ee] = false
-											ChangeVisible(ee, false)
-										elseif type(vv) == "string" and not table.find(value, vv) then
-											s.Values[vv] = false
-											table.remove(s.Value, table.find(s.Value, vv))
-											ChangeVisible(vv, false)
+										local fe = type(ee) == "string" and ee or vv
+										if not table.find(value, fe) and not value[fe] then
+											s.Values[fe] = false
+											ChangeVisible(fe, false)
+											if type(vv) == "string" then
+												table.remove(s.Value, table.find(s.Value, fe))
+											else
+												s.Value[fe] = nil
+											end
 										end
 									end
 								end
@@ -4233,14 +4243,15 @@ do
 							elseif s.List[o] and type(v) == "number" then
 								if s.Value then
 									for ee,vv in next, s.Value do
-										if type(ee) == "string" and not value[ee] then
-											s.Value[ee] = nil
-											s.Values[ee] = false
-											ChangeVisible(ee, false)
-										elseif type(vv) == "string" and not table.find(value, vv) then
-											s.Values[vv] = false
-											table.remove(s.Value, table.find(s.Value, vv))
-											ChangeVisible(vv, false)
+										local fe = type(ee) == "string" and ee or vv
+										if not table.find(value, fe) and not value[fe] then
+											s.Values[fe] = false
+											ChangeVisible(fe, false)
+											if type(vv) == "string" then
+												table.remove(s.Value, table.find(s.Value, fe))
+											else
+												s.Value[fe] = nil
+											end
 										end
 									end
 								end
@@ -4254,14 +4265,15 @@ do
 							elseif type(v) == "string" and table.find(s.List, v) and not table.find(s.Value, v) then
 								if s.Value then
 									for ee,vv in next, s.Value do
-										if type(ee) == "string" and not value[ee] then
-											s.Value[ee] = nil
-											s.Values[ee] = false
-											ChangeVisible(ee, false)
-										elseif type(vv) == "string" and not table.find(value, vv) then
-											s.Values[vv] = false
-											table.remove(s.Value, table.find(s.Value, vv))
-											ChangeVisible(vv, false)
+										local fe = type(ee) == "string" and ee or vv
+										if not table.find(value, fe) and not value[fe] then
+											s.Values[fe] = false
+											ChangeVisible(fe, false)
+											if type(vv) == "string" then
+												table.remove(s.Value, table.find(s.Value, fe))
+											else
+												s.Value[fe] = nil
+											end
 										end
 									end
 								end
@@ -4270,14 +4282,15 @@ do
 								table.insert(s.Value, v)
 							elseif type(v) == "string" and table.find(s.List, v) and table.find(s.Value, v) then
 								for ee,vv in next, s.Value do
-									if type(ee) == "string" and not value[ee] then
-										s.Value[ee] = nil
-										s.Values[ee] = false
-										ChangeVisible(ee, false)
-									elseif type(vv) == "string" and not table.find(value, vv) then
-										s.Values[vv] = false
-										table.remove(s.Value, table.find(s.Value, vv))
-										ChangeVisible(vv, false)
+									local fe = type(ee) == "string" and ee or vv
+									if not table.find(value, fe) and not value[fe] then
+										s.Values[fe] = false
+										ChangeVisible(fe, false)
+										if type(vv) == "string" then
+											table.remove(s.Value, table.find(s.Value, fe))
+										else
+											s.Value[fe] = nil
+										end
 									end
 								end
 							end
@@ -4330,6 +4343,16 @@ do
 							s.Value = value
 							s.Values[s.Value] = true
 							ChangeVisible(s.Value, true)
+						elseif type(value) == "string" and s.List[value] then
+							if s.Value then
+								local vv = type(s.Value) == "table" and s.Value.Name or s.Value
+								s.Values[vv] = false
+								ChangeVisible(vv, false)
+							end
+							s.Value = s.List[value]
+							s.Value.Value = true
+							s.Value.Number = s.List[value].Number or 0
+							Library.Dropdown[n].List[value].SliderChanged(s.Value.Number)
 						elseif type(value) == "number" and s.List[value] then
 							if s.Value then
 								local vv = type(s.Value) == "table" and s.Value.Name or s.Value
@@ -5496,4 +5519,3 @@ do
 	end
 	return Library
 end
-
