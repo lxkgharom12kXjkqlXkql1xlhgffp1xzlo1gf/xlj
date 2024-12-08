@@ -4184,8 +4184,8 @@ do
 						end
 					end
 					s.List = list
+					setmetatable(s.List, setmetatablefunc())
 					BuildDropdownList()
-                    setmetatable(s.List, setmetatablefunc())
 					s.UpdateTextDisplay()
 				end
 
@@ -4367,7 +4367,6 @@ do
 
 				BuildDropdownList()
 				s:SetValue(s.Default)
-				s.UpdateTextDisplay()
 				Library.AddConfigs(n, s)
 				s.UpdateTextDisplay()
 				return s
