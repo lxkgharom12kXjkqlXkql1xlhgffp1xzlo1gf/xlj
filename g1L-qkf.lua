@@ -2533,7 +2533,7 @@ do
 				)
 
 				table.insert(Page[h.Tab].Data, {Container = s.Frame, Title = function()
-					return s.Title
+					return s.SearchTitle or s.Title
 				end})
 
 				function s:SetTitle(text)
@@ -2694,7 +2694,7 @@ do
 				)
 
 				table.insert(Page[h.Tab].Data, {Container = s.Frame, Title = function()
-					return s.Title
+					return s.SearchTitle or s.Title
 				end})
 
 				function s:SetTitle(text)
@@ -2788,7 +2788,7 @@ do
 				s.Unlock = d.Unlock
 
 				table.insert(Page[h.Tab].Data, {Container = d.Frame, Title = function()
-					return d.Title
+					return d.SearchTitle or d.Title
 				end})
 
 				local SliderLine = e("Frame",
@@ -2991,7 +2991,7 @@ do
 				s.Unlock = d.Unlock
 
 				table.insert(Page[h.Tab].Data, {Container = d.Frame, Title = function()
-					return d.Title
+					return d.SearchTitle or d.Title
 				end})
 
 				local Input = e("TextBox",
@@ -3119,7 +3119,7 @@ do
 				s.Unlock = d.Unlock
 
 				table.insert(Page[h.Tab].Data, {Container = d.Frame, Title = function()
-					return d.Title
+					return d.SearchTitle or d.Title
 				end})
 
 				local Toggle = e("Frame",
@@ -3241,7 +3241,7 @@ do
 				end
 
 				table.insert(Page[h.Tab].Data, {Container = d.Frame, Title = function()
-					return d.Title
+					return d.SearchTitle or d.Title
 				end})
 
 				function s:LockState()
@@ -4425,7 +4425,7 @@ do
 				s.Unlock = d.Unlock
 
 				table.insert(Page[h.Tab].Data, {Container = d.Frame, Title = function()
-					return d.Title
+					return d.SearchTitle or d.Title
 				end})
 
 				local Text = e("TextLabel",
@@ -4678,7 +4678,7 @@ do
 				d.SubTiltleContent.Size = UDim2.new(1, -150, 0, 14)
 
 				table.insert(Page[h.Tab].Data, {Container = d.Frame, Title = function()
-					return d.Title
+					return d.SearchTitle or d.Title
 				end})
 
 				local Return = e("TextButton",
