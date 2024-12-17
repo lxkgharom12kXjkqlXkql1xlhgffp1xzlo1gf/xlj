@@ -668,7 +668,7 @@ do
 										BackgroundTransparency = 1,
 										Name = "Icon",
 										Position = UDim2.fromScale(0.5, 0.5),
-										Size = UDim2.new(1, -1, 1, -1),
+										Size = UDim2.new(1, -2, 1, -2),
 									},
 									{
 										e("UICorner", {CornerRadius = UDim.new(1, 0)}),
@@ -1044,7 +1044,7 @@ do
 							{
 								AnchorPoint = Vector2.new(0.5, 0.5),
 								Image = Library.Logo,
-								Size = UDim2.new(1, -1, 1, -1),
+								Size = UDim2.new(1, -2, 1, -2),
 								BackgroundTransparency = 1,
 								Name = "Icon",
 								Position = UDim2.fromScale(0.5, 0.5),
@@ -1743,7 +1743,7 @@ do
 														ZIndex = 3,
 														AnchorPoint = Vector2.new(0.5, 0.5),
 														Image = Library.Logo,
-														Size = UDim2.new(1, -1, 1, -1),
+														Size = UDim2.new(1, -2, 1, -2),
 														BackgroundTransparency = 1,
 														Name = "Icon",
 														Position = UDim2.fromScale(0.5, 0.5),
