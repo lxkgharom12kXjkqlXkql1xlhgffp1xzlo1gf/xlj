@@ -24,7 +24,8 @@ local Library = {
 	Info = nil,
 	Position = nil,
 	AutoSave = false,
-	Start = tick()
+	Start = tick(),
+	Logo = "rbxassetid://78484575433047"
 }
 
 Library.Parser = {
@@ -661,7 +662,7 @@ do
 								e("ImageLabel",
 									{
 										ZIndex = 3,
-										Image = Options.Logo or "rbxassetid://78484575433047",
+										Image = Library.Logo,
 										AnchorPoint = Vector2.new(0.5, 0.5),
 										ImageColor3 = Color3.fromRGB(230, 230, 230),
 										BackgroundTransparency = 1,
@@ -799,6 +800,8 @@ do
 		if Options.Hide then
 			Library.Window.Root.Visible = false
 		end
+
+		Library.Logo = Options.Logo or Library.Logo
 
 		Options.Ignore = Options.Ignore or {}
 
@@ -1040,7 +1043,7 @@ do
 						e("ImageLabel",
 							{
 								AnchorPoint = Vector2.new(0.5, 0.5),
-								Image = Options.Logo or "rbxassetid://78484575433047",
+								Image = Library.Logo,
 								Size = UDim2.new(1, -1, 1, -1),
 								BackgroundTransparency = 1,
 								Name = "Icon",
@@ -1417,7 +1420,7 @@ do
 		Library.ToggleGUI = e("ImageButton",
 			{
 				Parent = Library.GUI,
-				Image = "rbxassetid://78484575433047",
+				Image = Library.Logo,
 				Size = UDim2.fromOffset((ex / 20) - 2, (ex / 20) - 5),
 				BackgroundTransparency = 1,
 				ZIndex = 5,
@@ -1739,7 +1742,7 @@ do
 													{
 														ZIndex = 3,
 														AnchorPoint = Vector2.new(0.5, 0.5),
-														Image = Options.Logo or "rbxassetid://78484575433047",
+														Image = Library.Logo,
 														Size = UDim2.new(1, -1, 1, -1),
 														BackgroundTransparency = 1,
 														Name = "Icon",
