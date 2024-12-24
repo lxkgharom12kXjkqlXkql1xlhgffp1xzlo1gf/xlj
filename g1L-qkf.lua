@@ -383,6 +383,7 @@ do
 	end
 
 	function Library.AddConfigs(index, value)
+		Library.CreateCount += 1
 		Library.Options[index] = value
 	end
 
