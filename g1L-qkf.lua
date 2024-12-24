@@ -20,6 +20,7 @@ local Library = {
 	Signals = {},
 	GUI = nil,
 	SelectTab = 0,
+	CreateCount = 0,
 	Menuinfo = {},
 	Info = nil,
 	Position = nil,
