@@ -819,7 +819,7 @@ do
 				local mils = string.format(".%.03d", (tIck % 1) * 1000)
 				Library:Notify({
 					DisableClose = true,
-					Title = "Successful Loaded",
+					Title = "Successfully Loaded",
 					SubTitle = "Loaded Ui In "..tostring(secs..mils).."s Press "..(Options.MinimizeKey and Options.MinimizeKey.Name or Library.MinimizeKey.Name).." For Show, Hide Ui",
 					Duration = function()
 						repeat task.wait() until Library.Window.Root.Visible
