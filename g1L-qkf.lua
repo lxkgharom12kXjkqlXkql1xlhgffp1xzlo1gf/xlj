@@ -432,6 +432,11 @@ do
 		table.insert(Library.CallbackUnloaded, type(functions) == "function" and functions or function() end)
 	end
 
+	Library.AddSignal(game:GetService("Players").LocalPlayer.Idled, function()
+		game:GetService("VirtualUser"):CaptureController()
+		game:GetService("VirtualUser"):ClickButton2(Vector2.new())
+	end)
+
 	Library.AddSignal(Library.GUI:GetPropertyChangedSignal("Parent"), function()
 		if not Library.GUI.Parent then
 			Library:Destroy()
