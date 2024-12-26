@@ -2934,18 +2934,17 @@ do
 					end
 					if (not tonumber(value)) and value:len() > 0 then
 						value = s.Value
-					else
-						if value == "" then
-						   value = 0
-						end
-						s.Value = Utility.Round(math.clamp(value, s.Min, s.Max), s.Rounding)
-						SliderLine.Frame.ImageLabel.Position = UDim2.new((s.Value - s.Min) / (s.Max - s.Min), -4, 0.5, 0)
-						SliderLine.Point.Size = UDim2.fromScale((s.Value - s.Min) / (s.Max - s.Min), 1)
-						SliderLine.Frame.TextLabel.Position = UDim2.new((s.Value - s.Min) / (s.Max - s.Min), -4, 0.5, -12)
-
-						SliderInput.TextBox.Text = s.Value
-						SliderLine.Frame.TextLabel.Text = tostring(s.Value)
+					elseif value == "" then
+						value = s.Min or 0
 					end
+					s.Value = Utility.Round(math.clamp(value, s.Min, s.Max), s.Rounding)
+					SliderLine.Frame.ImageLabel.Position = UDim2.new((s.Value - s.Min) / (s.Max - s.Min), -4, 0.5, 0)
+					SliderLine.Point.Size = UDim2.fromScale((s.Value - s.Min) / (s.Max - s.Min), 1)
+					SliderLine.Frame.TextLabel.Position = UDim2.new((s.Value - s.Min) / (s.Max - s.Min), -4, 0.5, -12)
+
+					SliderInput.TextBox.Text = s.Value
+					SliderLine.Frame.TextLabel.Text = tostring(s.Value)
+
 					Library.SafeCallback(changedD, s.Value)
 					Library.SafeCallback(l.Callback, s.Value)
 				end
@@ -3999,22 +3998,23 @@ do
                                 end
                                 if (not tonumber(value)) and value:len() > 0 then
                                     value = D.Number
-                                else
-                                    value = value == "" and 0 or value
-                                    D.Number = Utility.Round(math.clamp(value, D.Min, D.Max), D.Rounding)
-                                    A.Frame.ImageLabel.Position = UDim2.new((D.Number - D.Min) / (D.Max - D.Min), -4, 0.5, 0)
-                                    A.Point.Size = UDim2.fromScale((D.Number - D.Min) / (D.Max - D.Min), 1)
-                                    A.Frame.TextLabel.Position = UDim2.new((D.Number - D.Min) / (D.Max - D.Min), -4, 0.5, -10)
-
-                                    B.TextBox.Text = tostring(D.Number)
-                                    A.Frame.TextLabel.Text = tostring(D.Number)
-
-                                    if s.Multi and s.Value[f] then
-                                        s.Value[f].Number = D.Number
-                                    elseif not s.Multi and s.Value and type(s.Value) == "table" then
-                                        s.Value.Number = D.Number
-                                    end
+                                elseif value == "" then
+									value = D.Min or 0
                                 end
+								D.Number = Utility.Round(math.clamp(value, D.Min, D.Max), D.Rounding)
+								A.Frame.ImageLabel.Position = UDim2.new((D.Number - D.Min) / (D.Max - D.Min), -4, 0.5, 0)
+								A.Point.Size = UDim2.fromScale((D.Number - D.Min) / (D.Max - D.Min), 1)
+								A.Frame.TextLabel.Position = UDim2.new((D.Number - D.Min) / (D.Max - D.Min), -4, 0.5, -10)
+
+								B.TextBox.Text = tostring(D.Number)
+								A.Frame.TextLabel.Text = tostring(D.Number)
+
+								if s.Multi and s.Value[f] then
+									s.Value[f].Number = D.Number
+								elseif not s.Multi and s.Value and type(s.Value) == "table" then
+									s.Value.Number = D.Number
+								end
+
                                 s.UpdateTextDisplay()
                                 Library.SafeCallback(changedD, s.Value)
                                 Library.SafeCallback(l.Callback, s.Value)
